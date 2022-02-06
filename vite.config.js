@@ -1,3 +1,3 @@
 export default {
-    base: "/canvas-fireworks"
+    base: "/canvas-fireworks/"
 }
