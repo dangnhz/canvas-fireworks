@@ -168,7 +168,7 @@ function createBullet(x:number, y:number) {
 
 
 
-setInterval(() => createBullet(randomIntegerNumber(canvas.width / 2 - 300, canvas.width / 2 + 300), randomIntegerNumber(100, canvas.height / 3)), 3000)
+setInterval(() => createBullet(randomIntegerNumber(canvas.width / 2 -100, canvas.width / 2 + 100), randomIntegerNumber(100, canvas.height / 3)), 3000)
 
 fire();
 animate();
