@@ -12,10 +12,15 @@ window.addEventListener("resize", () => {
   canvas.height = window.innerHeight;
 });
 
-function randomNumber(a:number,b:number):number {
+function randomIntegerNumber(a:number,b:number):number {
+  return Math.floor(Math.random() * (a - b) + b);
+}
+
+function randomFloatNumber(a:number,b:number):number {
   return Math.random() * (a - b) + b;
 }
 
+const colorPallet:number[]= [330, 353, 18, 182, 13, 346, 327, 229, 1, 275, 232, 7]
 
 class Particle {
   x: number;
@@ -27,13 +32,17 @@ class Particle {
   vy = Math.sin(this.angle) * this.speed;
   gravity = 0.05;
   resistance = 0.998;
-  shrink = randomNumber(0.05 ,0.15);
+  shrink = randomFloatNumber(0.05 ,0.15);
   color: string;
+  rainbowColor: string;
+  isRainbow;
 
-  constructor(x: number, y: number, hue:number) {
+  constructor(x: number, y: number, hue:number, isRainbow:boolean) {
     this.x = x;
     this.y = y;
-    this.color = `hsla(${hue + randomNumber(20,40)}, 100%, ${randomNumber(50, 90)}%, 1)`
+    this.isRainbow = isRainbow;
+    this.color = `hsla(${hue}, 100%, ${randomIntegerNumber(40, 100)}%, 1)`;
+    this.rainbowColor = `hsla(${colorPallet[randomIntegerNumber(0, colorPallet.length -1)]}, ${randomIntegerNumber(80, 100)}%, ${randomIntegerNumber(10, 90)}%, 1)`;
   }
 
   update() {
@@ -50,7 +59,7 @@ class Particle {
 
   draw() {
     ctx!.beginPath();
-    ctx!.fillStyle = this.color;
+    ctx!.fillStyle = this.isRainbow ? this.rainbowColor: this.color;
     ctx!.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     ctx!.fill();
   }
@@ -68,8 +77,9 @@ class Bullet {
   angle: number;
   isExploded: boolean = false;
   hue:number;
+  isRainbow:boolean
 
-  constructor(x: number, y: number, color: string, hue:number) {
+  constructor(x: number, y: number, color: string, hue:number, isRainbow:boolean) {
     this.color = color;
     this.targetX = x;
     this.targetY = y;
@@ -80,6 +90,7 @@ class Bullet {
     this.velX = Math.sin(this.angle);
     this.velY = Math.cos(this.angle);
     this.hue = hue;
+    this.isRainbow= isRainbow;
   }
 
   update() {
@@ -102,7 +113,7 @@ class Bullet {
     let number = Math.random() * (300 - 150) + 150;
     for (let i = 1; i < number; i++) {
       fireworks.push(
-        new Particle(this.targetX + Math.random() * 5, this.targetY, this.hue)
+        new Particle(this.targetX + Math.random() * 5, this.targetY, this.hue, this.isRainbow)
       );
     }
     this.isExploded = true;
@@ -142,11 +153,11 @@ function animate() {
 
 function fire() {
   document.addEventListener("click", (e) => {
-    let hue = randomNumber(345, 165);
+    let hue = colorPallet[randomIntegerNumber(0, colorPallet.length - 1)];
     let color = `hsla(${hue}, 100%, 50%, 1)`
 
     bulletArray.push(
-      new Bullet(e.clientX, e.clientY, color, hue )
+      new Bullet(e.clientX, e.clientY, color, hue,  Math.random() < 0.5 ? false : true )
     );
   });
 }
