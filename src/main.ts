@@ -146,6 +146,7 @@ function animate() {
     }
   }
 
+
   drawParticle();
 
   requestAnimationFrame(animate);
@@ -153,14 +154,21 @@ function animate() {
 
 function fire() {
   document.addEventListener("click", (e) => {
-    let hue = colorPallet[randomIntegerNumber(0, colorPallet.length - 1)];
-    let color = `hsla(${hue}, 100%, 50%, 1)`
-
-    bulletArray.push(
-      new Bullet(e.clientX, e.clientY, color, hue,  Math.random() < 0.5 ? false : true )
-    );
+    createBullet(e.clientX, e.clientY)
   });
 }
+
+function createBullet(x:number, y:number) {
+  let hue = colorPallet[randomIntegerNumber(0, colorPallet.length - 1)];
+    let color = `hsla(${hue}, 100%, 50%, 1)`
+    bulletArray.push(
+      new Bullet(x, y, color, hue,  Math.random() < 0.5 ? false : true )
+    );
+}
+
+
+
+setInterval(() => createBullet(randomIntegerNumber(canvas.width / 2 - 300, canvas.width / 2 + 300), randomIntegerNumber(100, canvas.height / 3)), 3000)
 
 fire();
 animate();
