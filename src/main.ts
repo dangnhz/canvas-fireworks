@@ -12,22 +12,28 @@ window.addEventListener("resize", () => {
   canvas.height = window.innerHeight;
 });
 
+function randomNumber(a:number,b:number):number {
+  return Math.random() * (a - b) + b;
+}
+
+
 class Particle {
   x: number;
   y: number;
   speed = Math.cos((Math.random() * Math.PI) / 2) * 5;
   size: number = Math.random() * (6 - 2) + 2;
-  color: string = `hsla(${Math.random() * 400 + 12}, 100%, 60%, 1)`;
   angle: number = Math.random() * Math.PI * 2;
   vx = Math.cos(this.angle) * this.speed;
   vy = Math.sin(this.angle) * this.speed;
   gravity = 0.05;
   resistance = 0.998;
-  shrink = Math.random() * (0.15 - 0.05) + 0.05;
+  shrink = randomNumber(0.05 ,0.15);
+  color: string;
 
-  constructor(x: number, y: number) {
+  constructor(x: number, y: number, hue:number) {
     this.x = x;
     this.y = y;
+    this.color = `hsla(${hue + randomNumber(20,40)}, 100%, ${randomNumber(50, 90)}%, 1)`
   }
 
   update() {
@@ -61,8 +67,9 @@ class Bullet {
   velY: number;
   angle: number;
   isExploded: boolean = false;
+  hue:number;
 
-  constructor(x: number, y: number, color: string) {
+  constructor(x: number, y: number, color: string, hue:number) {
     this.color = color;
     this.targetX = x;
     this.targetY = y;
@@ -72,6 +79,7 @@ class Bullet {
     );
     this.velX = Math.sin(this.angle);
     this.velY = Math.cos(this.angle);
+    this.hue = hue;
   }
 
   update() {
@@ -94,7 +102,7 @@ class Bullet {
     let number = Math.random() * (300 - 150) + 150;
     for (let i = 1; i < number; i++) {
       fireworks.push(
-        new Particle(this.targetX + Math.random() * 5, this.targetY)
+        new Particle(this.targetX + Math.random() * 5, this.targetY, this.hue)
       );
     }
     this.isExploded = true;
@@ -134,10 +142,11 @@ function animate() {
 
 function fire() {
   document.addEventListener("click", (e) => {
-    let number = Math.random() * 360;
+    let hue = randomNumber(345, 165);
+    let color = `hsla(${hue}, 100%, 50%, 1)`
 
     bulletArray.push(
-      new Bullet(e.clientX, e.clientY, `hsla(${number}, 100%, 60%, 1)`)
+      new Bullet(e.clientX, e.clientY, color, hue )
     );
   });
 }
