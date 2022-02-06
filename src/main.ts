@@ -1,5 +1,60 @@
 import "./style.css";
+import burst1 from "./sounds/burst1.mp3";
+import burst2 from "./sounds/burst1.mp3";
+import lift1 from "./sounds/lift1.mp3";
+import lift2 from "./sounds/lift2.mp3";
+import lift3 from "./sounds/lift3.mp3";
 
+
+const burstSound1 = new Audio(burst1);
+const burstSound2 = new Audio(burst2);
+const liftSound1 = new Audio(lift1);
+const liftSound2 = new Audio(lift2);
+const liftSound3 = new Audio(lift3);
+
+const liftSounds = [liftSound1, liftSound2, liftSound3];
+const burstSounds = [burstSound1, burstSound2];
+
+function playSound(audio:any) {
+  if (audio.paused) {
+    audio.play();
+  } else {
+    audio.currentTime = 0;
+  }
+}
+
+class SoundManager {
+  play(type: string) {
+    if (type == "lift") {
+      playSound(liftSounds[randomIntegerNumber(0,2)])
+    }
+
+    if (type == "burst") {
+      playSound(burstSounds[randomIntegerNumber(0,1)])
+    }
+  }
+}
+
+const btnSoundOn = document.querySelector('.sound-on');
+const btnSoundOff = document.querySelector('.sound-off');
+const btnSoundControl = document.querySelector('.sound-control');
+let soundOn = false;
+
+btnSoundControl?.addEventListener('click', () => {
+
+  if (!soundOn) {
+    btnSoundOn?.classList.add('active');
+    btnSoundOff?.classList.remove('active');
+    soundOn = true;
+  } else {
+    btnSoundOn?.classList.remove('active');
+    btnSoundOff?.classList.add('active');
+    soundOn = false;
+  }
+
+})
+
+const soundManager = new SoundManager();
 const canvas = <HTMLCanvasElement>document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
 let bulletArray: Bullet[] = [];
@@ -12,7 +67,7 @@ window.addEventListener("resize", () => {
   canvas.height = window.innerHeight;
 });
 
-function randomIntegerNumber(a:number,b:number):number {
+export function randomIntegerNumber(a:number,b:number):number {
   return Math.floor(Math.random() * (a - b) + b);
 }
 
@@ -116,6 +171,9 @@ class Bullet {
         new Particle(this.targetX + Math.random() * 5, this.targetY, this.hue, this.isRainbow)
       );
     }
+    if (soundOn) {
+      soundManager.play('burst');
+    }
     this.isExploded = true;
   }
 }
@@ -153,8 +211,8 @@ function animate() {
 }
 
 function fire() {
-  document.addEventListener("click", (e) => {
-    createBullet(e.clientX, e.clientY)
+  canvas.addEventListener("click", (e) => {
+    createBullet(e.clientX, e.clientY);
   });
 }
 
@@ -164,6 +222,9 @@ function createBullet(x:number, y:number) {
     bulletArray.push(
       new Bullet(x, y, color, hue,  Math.random() < 0.5 ? false : true )
     );
+    if (soundOn) {
+      soundManager.play('lift');
+    }
 }
 
 
@@ -172,3 +233,5 @@ setInterval(() => createBullet(randomIntegerNumber(canvas.width / 2 -100, canvas
 
 fire();
 animate();
+
+
