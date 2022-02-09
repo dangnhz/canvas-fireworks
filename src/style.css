@@ -3,6 +3,14 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+body, html {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 canvas {
   width: 100%;
   height: 100vh;
@@ -24,20 +32,29 @@ canvas {
   z-index: 1;
 }
 
-.sound-control .btn {
+.play-pause {
+  position: fixed;
+  top: 60px;
+  left: 20px;
+  width: 30px;
+  height: 30px;
+  z-index: 1;
+}
+
+.sound-control .btn, .play-pause .btn {
   display: none;
   cursor: pointer;
 }
 
-.sound-control .btn.active {
+.sound-control .btn.active, .play-pause .btn.active {
   display: block;
 }
 
-.sound-control svg {
+.sound-control svg, .play-pause svg {
   fill: white;
   opacity: 0.5;
 }
 
-.sound-control svg:hover {
+.sound-control svg:hover, .play-pause svg:hover {
   opacity: 1;
 }

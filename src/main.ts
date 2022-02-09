@@ -1,19 +1,9 @@
 import "./style.css";
 import burst1 from "./sounds/burst1.mp3";
-import burst2 from "./sounds/burst1.mp3";
-import lift1 from "./sounds/lift1.mp3";
-import lift2 from "./sounds/lift2.mp3";
 import lift3 from "./sounds/lift3.mp3";
 
-
 const burstSound1 = new Audio(burst1);
-const burstSound2 = new Audio(burst2);
-const liftSound1 = new Audio(lift1);
-const liftSound2 = new Audio(lift2);
-const liftSound3 = new Audio(lift3);
-
-const liftSounds = [liftSound1, liftSound2, liftSound3];
-const burstSounds = [burstSound1, burstSound2];
+const liftSound1 = new Audio(lift3);
 
 function playSound(audio:any) {
   if (audio.paused) {
@@ -26,11 +16,11 @@ function playSound(audio:any) {
 class SoundManager {
   play(type: string) {
     if (type == "lift") {
-      playSound(liftSounds[randomIntegerNumber(0,2)])
+      playSound(liftSound1)
     }
 
     if (type == "burst") {
-      playSound(burstSounds[randomIntegerNumber(0,1)])
+      playSound(burstSound1)
     }
   }
 }
@@ -38,7 +28,13 @@ class SoundManager {
 const btnSoundOn = document.querySelector('.sound-on');
 const btnSoundOff = document.querySelector('.sound-off');
 const btnSoundControl = document.querySelector('.sound-control');
+
+const btnPlay = document.querySelector('.play');
+const btnPause = document.querySelector('.pause');
+const btnAutoPlay = document.querySelector('.play-pause');
+
 let soundOn = false;
+let isAutoPlay = true;
 
 btnSoundControl?.addEventListener('click', () => {
 
@@ -53,6 +49,23 @@ btnSoundControl?.addEventListener('click', () => {
   }
 
 })
+
+btnAutoPlay?.addEventListener('click', () => {
+
+  if (!isAutoPlay) {
+    btnPause?.classList.add('active');
+    btnPlay?.classList.remove('active');
+    isAutoPlay = true;
+    startFireworks();
+  } else {
+    btnPause?.classList.remove('active');
+    btnPlay?.classList.add('active');
+    isAutoPlay = false;
+    stopFireworks();
+  }
+
+})
+
 
 const soundManager = new SoundManager();
 const canvas = <HTMLCanvasElement>document.querySelector("#canvas");
@@ -123,7 +136,7 @@ class Particle {
 class Bullet {
   x: number = canvas.width / 2;
   y: number = canvas.height;
-  size: number = 2.5;
+  size: number = 2;
   color: string;
   targetX: number;
   targetY: number;
@@ -149,8 +162,8 @@ class Bullet {
   }
 
   update() {
-    this.x += this.velX * 12;
-    this.y += this.velY * 12;
+    this.x += this.velX * 10;
+    this.y += this.velY * 10;
 
     if (this.y <= this.targetY + 5) {
       this.explode();
@@ -227,11 +240,27 @@ function createBullet(x:number, y:number) {
     }
 }
 
+let myInterval:any;
 
+function startFireworks() {
+  myInterval = setInterval(() => {
+      createBullet(randomIntegerNumber(canvas.width * 0.25, canvas.width * 0.75), randomIntegerNumber(150, canvas.height / 3))
+  }, 400)
+}
 
-setInterval(() => createBullet(randomIntegerNumber(canvas.width / 2 -100, canvas.width / 2 + 100), randomIntegerNumber(100, canvas.height / 3)), 3000)
+function stopFireworks() {
+  clearInterval(myInterval);
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopFireworks();
+  } else {
+    startFireworks()
+  }
+})
 
 fire();
 animate();
-
+startFireworks();
 
