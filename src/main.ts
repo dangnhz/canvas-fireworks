@@ -256,7 +256,7 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     stopFireworks();
   } else {
-    startFireworks()
+    if(isAutoPlay) startFireworks()
   }
 })
 
