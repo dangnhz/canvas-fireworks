@@ -88,13 +88,12 @@ function randomFloatNumber(a:number,b:number):number {
   return Math.random() * (a - b) + b;
 }
 
-const colorPallet:number[]= [330, 353, 18, 182, 13, 346, 327, 229, 1, 275, 232, 7]
-
+const colorPallet:number[]= [330, 333, 1, 355, 8, 145, 180, 182, 200, 275, 310, 346, 327, 350];
 class Particle {
   x: number;
   y: number;
   speed = Math.cos((Math.random() * Math.PI) / 2) * 5;
-  size: number = Math.random() * (6 - 2) + 2;
+  size: number = randomFloatNumber(3, 7);
   angle: number = Math.random() * Math.PI * 2;
   vx = Math.cos(this.angle) * this.speed;
   vy = Math.sin(this.angle) * this.speed;
@@ -105,11 +104,11 @@ class Particle {
   rainbowColor: string;
   isRainbow;
 
-  constructor(x: number, y: number, hue:number, isRainbow:boolean) {
+  constructor(x: number, y: number, hue:number, isRainbow:boolean ) {
     this.x = x;
     this.y = y;
     this.isRainbow = isRainbow;
-    this.color = `hsla(${hue}, 100%, ${randomIntegerNumber(40, 100)}%, 1)`;
+    this.color = `hsla(${hue}, 100%, ${randomIntegerNumber(50, 70)}%, 1)`;
     this.rainbowColor = `hsla(${colorPallet[randomIntegerNumber(0, colorPallet.length -1)]}, ${randomIntegerNumber(80, 100)}%, ${randomIntegerNumber(10, 90)}%, 1)`;
   }
 
@@ -230,10 +229,10 @@ function fire() {
 }
 
 function createBullet(x:number, y:number) {
-  let hue = colorPallet[randomIntegerNumber(0, colorPallet.length - 1)];
+    let hue = colorPallet[randomIntegerNumber(0, colorPallet.length - 1)];
     let color = `hsla(${hue}, 100%, 50%, 1)`
     bulletArray.push(
-      new Bullet(x, y, color, hue,  Math.random() < 0.5 ? false : true )
+      new Bullet(x, y, color, hue,  Math.random() < 0.6 ? false : true )
     );
     if (soundOn) {
       soundManager.play('lift');

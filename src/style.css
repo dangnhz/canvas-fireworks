@@ -35,9 +35,9 @@ canvas {
 .play-pause {
   position: fixed;
   top: 60px;
-  left: 20px;
-  width: 30px;
-  height: 30px;
+  left: 18px;
+  width: 33px;
+  height: 33px;
   z-index: 1;
 }
 
