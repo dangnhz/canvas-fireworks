@@ -88,18 +88,20 @@ function randomFloatNumber(a:number,b:number):number {
   return Math.random() * (a - b) + b;
 }
 
-const colorPallet:number[]= [330, 333, 1, 355, 8, 145, 180, 182, 200, 275, 310, 346, 327, 350];
+const colorPallet:number[]= [330, 55, 360, 355, 8, 140, 180, 182, 200, 275, 310, 346, 327, 350];
+const rainbowColorPallet:number[]= [330, 353, 200, 10, 345, 327, 275];
+
 class Particle {
   x: number;
   y: number;
   speed = Math.cos((Math.random() * Math.PI) / 2) * 5;
-  size: number = randomFloatNumber(3, 7);
+  size: number = randomFloatNumber(3, 5);
   angle: number = Math.random() * Math.PI * 2;
   vx = Math.cos(this.angle) * this.speed;
   vy = Math.sin(this.angle) * this.speed;
   gravity = 0.05;
   resistance = 0.998;
-  shrink = randomFloatNumber(0.05 ,0.15);
+  shrink = randomFloatNumber(0.05 ,0.1);
   color: string;
   rainbowColor: string;
   isRainbow;
@@ -109,7 +111,7 @@ class Particle {
     this.y = y;
     this.isRainbow = isRainbow;
     this.color = `hsla(${hue}, 100%, ${randomIntegerNumber(50, 70)}%, 1)`;
-    this.rainbowColor = `hsla(${colorPallet[randomIntegerNumber(0, colorPallet.length -1)]}, ${randomIntegerNumber(80, 100)}%, ${randomIntegerNumber(10, 90)}%, 1)`;
+    this.rainbowColor = `hsla(${rainbowColorPallet[randomIntegerNumber(0, rainbowColorPallet.length -1)]}, ${randomIntegerNumber(80, 100)}%, ${randomIntegerNumber(10, 90)}%, 1)`;
   }
 
   update() {
@@ -177,7 +179,7 @@ class Bullet {
   }
 
   explode() {
-    let number = Math.random() * (300 - 150) + 150;
+    let number = Math.random() * (250 - 100) + 150;
     for (let i = 1; i < number; i++) {
       fireworks.push(
         new Particle(this.targetX + Math.random() * 5, this.targetY, this.hue, this.isRainbow)
@@ -216,7 +218,6 @@ function animate() {
     }
   }
 
-
   drawParticle();
 
   requestAnimationFrame(animate);
@@ -244,7 +245,7 @@ let myInterval:any;
 function startFireworks() {
   myInterval = setInterval(() => {
       createBullet(randomIntegerNumber(canvas.width * 0.25, canvas.width * 0.75), randomIntegerNumber(150, canvas.height / 3))
-  }, 400)
+  }, 800)
 }
 
 function stopFireworks() {
