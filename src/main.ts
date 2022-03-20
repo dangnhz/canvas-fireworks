@@ -1,7 +1,7 @@
 import "./style.css";
 import burst1 from "./sounds/burst1.mp3";
 import lift3 from "./sounds/lift3.mp3";
-
+import Stats from 'stats.js';
 const burstSound1 = new Audio(burst1);
 const liftSound1 = new Audio(lift3);
 
@@ -179,7 +179,7 @@ class Bullet {
   }
 
   explode() {
-    let number = Math.random() * (250 - 100) + 150;
+    let number = Math.random() * 150 + 150;
     for (let i = 1; i < number; i++) {
       fireworks.push(
         new Particle(this.targetX + Math.random() * 5, this.targetY, this.hue, this.isRainbow)
@@ -201,10 +201,16 @@ function drawParticle() {
       fireworks.splice(i, 1);
       i--;
     }
+    
   }
 }
 
+var stats = new Stats();
+stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild( stats.dom );
+
 function animate() {
+  stats.begin();
   ctx!.fillStyle = "hsla(0, 0%, 0% ,0.2)";
   ctx!.fillRect(0, 0, canvas.width, canvas.height);
   if (bulletArray?.length > 0) {
@@ -219,6 +225,7 @@ function animate() {
   }
 
   drawParticle();
+  stats.end();
 
   requestAnimationFrame(animate);
 }
